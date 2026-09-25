@@ -12,7 +12,7 @@
 
 ## Alternatives considered
 1. TypeScript/Node — native to Claude Code's ecosystem, but adds a runtime dependency for Hermes (Python) users and a build step.
-2. Claude-Code-only plugin with logic in hook scripts — fastest v0, but locks the core to one harness; WorkHub/multi-harness is the long game.
+2. Claude-Code-only plugin with logic in hook scripts — fastest v0, but locks the core to one harness; multi-harness use is the long game.
 
 ## Tradeoffs
 Gain: one tested core across harnesses, zero deps, easy audit. Give up: hand-rolled MCP stdio (small, but ours to maintain).
