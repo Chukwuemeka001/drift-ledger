@@ -1,8 +1,8 @@
 # Guide: a session with Drift Ledger
 
 A walkthrough of what using it feels like, from an empty project to a resumed session a week later.
-Agent replies below are illustrative of the intended behavior — stronger models do this reliably; smaller ones
-don't always (see [EVIDENCE.md](EVIDENCE.md)).
+Agent replies below illustrate the intended behavior. How often each model actually behaves this way is measured,
+model by model, in [EVIDENCE.md](EVIDENCE.md) — smaller models slip, especially on forged claims.
 
 ## 1. Say what the work is
 
