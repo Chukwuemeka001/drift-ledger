@@ -1,6 +1,8 @@
 # Guide: a session with Drift Ledger
 
 A walkthrough of what using it feels like, from an empty project to a resumed session a week later.
+Agent replies below are illustrative of the intended behavior — stronger models do this reliably; smaller ones
+don't always (see [EVIDENCE.md](EVIDENCE.md)).
 
 ## 1. Say what the work is
 
@@ -27,7 +29,7 @@ The ledger for this folder is empty, so the agent also proposes the mission and 
 
 Wrong type — it's owed, not parked:
 
-> **You:** `/drift-ledger:confirm L3 L4 as obligation`
+> **You:** `/drift-ledger:confirm L3` and `/drift-ledger:confirm L4 as obligation`
 
 Types matter: an open **obligation** is what the completion gate and every future session will hold you to.
 
