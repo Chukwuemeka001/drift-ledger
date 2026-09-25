@@ -21,6 +21,14 @@ Drift Ledger keeps a small, **owner-confirmed** ledger per work thread and re-is
 
 It works alongside native memory — it doesn't replace it.
 
+## Documentation
+
+- [Why Drift Ledger exists](docs/WHY.md) — the problem, why pinning isn't enough, what the record needs
+- [How it works](docs/HOW_IT_WORKS.md) — threads, entries, authority, capture, boundaries, gates, storage
+- [Evidence](docs/EVIDENCE.md) — how we test, what we found, what surprised us
+- [Guide](docs/GUIDE.md) — a session from empty project to a resumed week later
+- [FAQ](docs/FAQ.md)
+
 ## Evidence
 
 Built on a public, pre-registered benchmark: **[GovDrift](https://github.com/Chukwuemeka001/GovDrift)**.
