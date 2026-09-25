@@ -1,0 +1,7 @@
+[
+ {"id": "m1", "topic": "insulin timing", "client_need": "pharmacological therapies", "why_missed": "mixed up rapid vs long-acting onset"},
+ {"id": "m2", "topic": "fall prevention", "client_need": "safety and infection control", "why_missed": "picked an RN-level action"},
+ {"id": "m3", "topic": "delegation to UAP", "client_need": "coordinated care", "why_missed": "unsure what PN can assign"},
+ {"id": "m4", "topic": "hypokalemia signs", "client_need": "physiological adaptation", "why_missed": "forgot ECG changes"},
+ {"id": "m5", "topic": "isolation precautions", "client_need": "safety and infection control", "why_missed": "droplet vs airborne"}
+]

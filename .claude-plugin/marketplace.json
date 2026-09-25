@@ -1,0 +1,14 @@
+{
+  "name": "drift-ledger",
+  "owner": {
+    "name": "Emeka Okpara"
+  },
+  "plugins": [
+    {
+      "name": "drift-ledger",
+      "source": "./plugin",
+      "description": "Owner-confirmed governing state for long-running agents: decisions, rules, parked items, one-time exceptions and obligations with status and provenance, re-issued at every compaction, resume and subagent hand-off. Agents propose; only the owner commits."
+    }
+  ],
+  "description": "Drift Ledger \u2014 owner-confirmed governing state for long-running coding agents."
+}

@@ -1,0 +1,7 @@
+{
+  "name": "drift-ledger",
+  "version": "0.1.0",
+  "description": "Governing state for long-running agents: owner decisions with status and provenance, re-issued at every compaction, resume and subagent handoff. Agents propose; only the owner commits.",
+  "author": {"name": "Emeka Okpara"},
+  "license": "MIT"
+}

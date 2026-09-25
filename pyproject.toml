@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "driftledger"
+version = "0.1.0"
+description = "Owner-confirmed governing state for long-running coding agents — survives compaction, new sessions and hand-offs between Claude Code, Codex and subagents."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Emeka Okpara"}]
+dependencies = []
+
+[project.scripts]
+driftledger = "driftledger.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "plugin"}
+packages = ["driftledger"]
