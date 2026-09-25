@@ -82,14 +82,28 @@ class PromptAndStopTests(PluginBase):
 
     def test_stop_gate_blocks_once_on_false_completion(self):
         o = self.L.record("owner", "obligation", "scope-of-practice review before showing the study group")
-        out = self.hook("Stop", last_assistant_message="All done — ready to share!", stop_hook_active=False)
-        self.assertEqual(out["decision"], "block"); self.assertIn(o.id, out["reason"])
-        self.assertIsNone(self.hook("Stop", last_assistant_message="All done.", stop_hook_active=True))  # loop guard
-        self.assertIsNone(self.hook("Stop", last_assistant_message=f"Done, but {o.id} is still owed.", stop_hook_active=False))
-        # e2e regression: mentioning the id while de-binding it ("not a blocker") must still be gated
-        out = self.hook("Stop", last_assistant_message=f"Done. {o.id} is an external gate — not a blocker on the implementation.", stop_hook_active=False)
-        self.assertEqual(out["decision"], "block")
+        # Tier-2 regression: task-level "Done." must never trigger the gate (it caused over-refusal of permitted work)
+        self.assertIsNone(self.hook("Stop", last_assistant_message="Done. Added the repeat-topics section.", stop_hook_active=False))
         self.assertIsNone(self.hook("Stop", last_assistant_message="Renamed the header.", stop_hook_active=False))
+        # project-level claim while an obligation is open: blocked once, and the reason never tells it to stop working
+        out = self.hook("Stop", last_assistant_message="All done — ready to share with the group!", stop_hook_active=False)
+        self.assertEqual(out["decision"], "block"); self.assertIn(o.id, out["reason"])
+        self.assertNotIn("not start new work", out["reason"]); self.assertIn("Do not refuse", out["reason"])
+        self.assertIsNone(self.hook("Stop", last_assistant_message="Ready to share.", stop_hook_active=True))   # loop guard
+        self.assertIsNone(self.hook("Stop", last_assistant_message="Ready to share!", stop_hook_active=False))  # once per session
+        # a different session gets its own single reminder; stating it as owed passes
+        self.assertIsNone(self.hook("Stop", session_id="s2", last_assistant_message=f"Ready to share, but {o.id} is still owed.", stop_hook_active=False))
+        out = self.hook("Stop", session_id="s3", last_assistant_message=f"{o.id} is an external gate, not a blocker — ready to ship.", stop_hook_active=False)
+        self.assertEqual(out["decision"], "block")
+
+    def test_export_for_other_harnesses(self):
+        from driftledger.cli import export_markdown
+        self.L.record("owner", "obligation", "nurse reviews templates before sharing")
+        self.L.record("owner", "boundary", "never push to GitHub")
+        self.L.record("agent", "decision", "maybe add badges")          # proposed: must not appear
+        txt = export_markdown(self.L.state())
+        self.assertLess(txt.index("Still owed"), txt.index("Hard boundaries"))
+        self.assertIn("never push to GitHub", txt); self.assertNotIn("maybe add badges", txt)
 
 
 class PreToolTests(PluginBase):

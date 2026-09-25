@@ -18,7 +18,11 @@ from . import ownercmd
 
 READ_VERBS = {"show", "status", "log", "packet", "export", "verify"}
 PROPOSE_RE = re.compile(r'^\s*[*_`>-]*\s*PROPOSE\s+([a-z]+)\s*:\s*"?(.+?)"?\s*(?:\|\s*reason:\s*(.*?))?\s*(?:\|\s*scope:\s*(.*?))?\s*$', re.I | re.M)
-DONE_RE = re.compile(r"\b(all done|done\.|finished|complete[d]?\b|ready to (ship|share|hand)|nothing (left|else|remaining)|call (it|this) (done|finished)|all set)", re.I)
+# PROJECT-level completion claims only. A task-level "Done." must never trigger the gate (Tier 2: the old lexical
+# trigger + "do not start new work" made Haiku abandon permitted tasks — P6 over-refusal 6/15 vs 14/15).
+DONE_RE = re.compile(r"\b(ready to (ship|share|release|publish|hand (it )?(off|over))|nothing (left|else|remaining) (to do|before)|"
+                     r"call (it|this) (done|finished|complete)|(the )?(project|tool|app|work) is (done|finished|complete)|"
+                     r"all (work|tasks) (are )?(done|complete)|good to (ship|share|go live))", re.I)
 TYPE_ALIASES = {"feedback": "constraint", "rule": "constraint", "supersession": "decision", "correction": "constraint"}
 
 REMINDER = ("[Drift Ledger] If the owner's message states anything that should govern future work — a decision "
@@ -116,13 +120,21 @@ def stop(inp, L, st):
         return
     st = L.state()
     open_obl = [e for e in st.entries.values() if e.open_obligation]
-    OWED_RE = re.compile(r"\b(still (owed|open|outstanding|pending|required)|not (yet )?(done|complete|discharged|run)|blocks? (sharing|release|showing)|must happen before)", re.I)
-    if open_obl and DONE_RE.search(msg) and not (any(e.id in msg for e in open_obl) and OWED_RE.search(msg)):
-        names = "; ".join(f"{e.id}: {e.text[:120]}" for e in open_obl)
-        print(json.dumps({"decision": "block", "reason":
-            f"[Drift Ledger] Open obligation(s) the owner has not discharged: {names}. Before finishing, say plainly "
-            f"which of these are still owed (only the owner can mark them done). Do not start new work."}))
-        _metric(event="stop_gate", thread=L.thread_id, ids=[e.id for e in open_obl])
+    OWED_RE = re.compile(r"\b(still (owed|open|outstanding|pending|required)|not (yet )?(done|complete|discharged|run)|"
+                         r"blocks? (sharing|release|showing|shipping)|must happen before)", re.I)
+    if not open_obl or not DONE_RE.search(msg) or (any(e.id in msg for e in open_obl) and OWED_RE.search(msg)):
+        return
+    s = _sess(sid); surfaced = set(s.get("gate_surfaced", []))
+    fresh = [e for e in open_obl if e.id not in surfaced]
+    if not fresh:                       # at most once per obligation per session
+        return
+    s["gate_surfaced"] = sorted(surfaced | {e.id for e in fresh}); _save_sess(sid, s)
+    names = "; ".join(f"{e.id}: {e.text[:120]}" for e in fresh)
+    print(json.dumps({"decision": "block", "reason":
+        f"[Drift Ledger] You described the work as finished or ready while the owner still has open obligation(s): {names}. "
+        f"Keep your answer to the owner's request as it is and add one line saying these are still owed (only the owner can "
+        f"mark them done). Do not refuse, pause or hold back any other work because of this."}))
+    _metric(event="stop_gate", thread=L.thread_id, ids=[e.id for e in fresh])
 
 
 def _cli_verb(cmd):
