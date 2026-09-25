@@ -14,11 +14,17 @@ ledger couldn't.
 **Will it make my agent refuse to do things?**
 It's designed not to. The handoff notice tells the agent the ledger governs *how* it acts on your instructions, not
 *whether* you may give them: flag a conflict once, ask, and then do what you decide. Permitted work adjacent to a rule
-shouldn't be blocked, and we measure that in every eval.
+shouldn't be blocked, and we measure that in every eval. Our first confirmatory study caught exactly this failure — an
+over-eager completion gate made small models stall on allowed work (6/15 vs 14/15). We fixed it and re-tested: 5/6 and
+6/6 vs native 5/6.
 
 **Does it cost tokens?**
-The packet is ~1–2k tokens per boundary and the capture reminder ~60 tokens per turn. In our measurements governed
-sessions were **cheaper** overall (~20–25%), because agents stopped doing work the owner had ruled out.
+The packet is ~1–2k tokens per boundary and the capture reminder ~60 tokens per turn. In every study governed sessions
+used **fewer** output tokens (−4% to −48% depending on the model), because agents stopped doing work the owner had ruled out.
+
+**Do I still need it with a strong model like Opus?**
+Less inside one harness — Opus with native memory already keeps most rules. Yes if more than one agent or harness works on
+the same project: native memory is invisible to the next agent; the ledger isn't (5/5 vs 0/5 at ~250k context).
 
 **What if I forget to confirm proposals?**
 They stay visible as pending and never govern. The agent keeps working. We test this "lazy owner" case explicitly.

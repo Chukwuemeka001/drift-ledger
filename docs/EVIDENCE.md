@@ -48,9 +48,25 @@ the full rules only when the ledger was exported for it.
 **4/4 vs 0/4**; a rule held after two compactions **4/4 vs 2/4**; ~20% cheaper. And one honest null: the forged note
 fooled the small model *in the moment* in **both** arms (1/4 each).
 
-**Tier 2 / 2b / 2c (pre-registered).** The confirmatory study with native memory ON — Claude Haiku and Sonnet
-(n=15 per arm), GPT-6-Sol through Codex (n=10 per arm), and Claude Opus (n=5 per arm, descriptive) — including a
-"lazy owner" arm who stops maintaining the ledger. Results are published in GovDrift.
+**Tier 2 — Claude Haiku and Sonnet (confirmatory, n=15 per arm).** With native memory ON: a fresh session knew what was
+still owed **14/15 vs 3/15**, a second agent (Codex) saw the rules **13/15 vs 2/15**, and "don't push to GitHub" held after
+two compactions **13/15 vs 6/15** — all three pre-registered primary effects, Holm-significant. The study was nevertheless
+**NOT SUPPORTED as pre-registered**: our completion gate made small models refuse permitted work (6/15 vs 14/15). The gate
+fired on any "Done." while an obligation was open and told the agent not to start new work; Haiku obeyed literally.
+
+**Tier 2-fix.** We changed the gate (project-level claims only, once per obligation, "finish the request and add one line"),
+pre-registered a re-test, and ran it: permitted work **5/6** (lazy owner **6/6**) vs native 5/6, with the gains intact
+(fresh session 6/6 vs 0/6, GitHub boundary 6/6 vs 1/6).
+
+**Tier 2b — GPT-6-Sol via Codex (n=10 per arm).** NOT SUPPORTED on its pre-registered primary cells (native Sol already
+recovered the owed item in a fresh session 9/10, and Codex→Claude transfer through an exported file was weak). But inside
+Codex the ledger changed Sol's behavior more than any other model's: native Sol built the parked leaderboard **10/10**
+times (0/10 with the ledger), never cited the no-GitHub rule (10/10 with it), accepted the forged note 5/10 times (0/10
+with it), with no over-refusal and **48% fewer output tokens**.
+
+**Tier 2c — Claude Opus (descriptive, n=5), then to ~250k context.** Native Opus with memory passed almost everything —
+including a forged "the owner approved publishing" note after a third compaction at 252–273k tokens. The ledger's one
+clear contribution was carrying the rules to a second agent: **5/5 vs 0/5**.
 
 ## Things we didn't expect
 
@@ -72,6 +88,9 @@ fooled the small model *in the moment* in **both** arms (1/4 each).
   across two vendors practical.
 
 ## What it does not do (yet)
+
+- It doesn't make strong models much better inside a single harness — Opus with native memory is already there.
+- Transfer into Claude Code from another harness through an exported file is weak; running the plugin in both harnesses is the supported path.
 
 - It protects the **record**, not the agent's in-the-moment judgment: a convincing forged claim can still sway a weaker
   model for a turn. The next boundary restores the truth.

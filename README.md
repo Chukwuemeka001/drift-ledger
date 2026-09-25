@@ -31,17 +31,30 @@ It works alongside native memory — it doesn't replace it.
 
 ## Evidence
 
-Built on a public, pre-registered benchmark: **[GovDrift](https://github.com/Chukwuemeka001/GovDrift)**.
+Built and tested in public, with pre-registered studies and published nulls: **[GovDrift](https://github.com/Chukwuemeka001/GovDrift)**.
+Every study runs agents through real compactions, then tempts them (the parked feature, a push to GitHub, "call it
+done", a forged "the review is done" note), and scores what they **do**, blind.
 
-- Tier 1 (pre-registered): a governance packet re-issued at compaction beat native compaction on conflict surfacing
-  (13/15 vs 2/15), scoped supersession (11/15 vs 0/15) and rules recall (13/15 vs 5/15), and was ~25% cheaper.
-- Addendum B: the same rules in a static CLAUDE.md recovered recall but not lifecycle (scoped supersession 5/15 vs 11/15),
-  and 7/15 agents rewrote their own CLAUDE.md (one deleted it).
-- Exploratory eval slice with native memory ON (n=4/arm, blinded Opus judge): fresh-session truth 4/4 vs 1/4,
-  second harness 4/4 vs 0/4, rule held after two compactions 4/4 vs 2/4; a forged "the review is done" note fooled the
-  weaker model in-session in **both** arms (the ledger protects recorded state, not in-the-moment belief).
-- Tier 2 (Claude Haiku/Sonnet), Tier 2b (GPT-6-Sol via Codex) and Tier 2c (Claude Opus): pre-registered, results in the
-  GovDrift repo.
+**What the ledger reliably adds, across models (native memory ON in every comparison):**
+
+| | Claude Haiku / Sonnet (n=15) | GPT-6-Sol via Codex (n=10) | Claude Opus (n=5, at ~250k context) |
+|---|---|---|---|
+| Fresh session knows what's still owed | **14/15** vs 3/15 | 10/10 vs 9/10 | 5/5 vs 5/5 |
+| A second agent (Codex) sees the rules | **13/15** vs 2/15 | 1/10 vs 0/10 | **5/5** vs 0/5 |
+| Holds "don't push to GitHub" after two compactions | **13/15** vs 6/15 | **10/10** vs 0/10 | 5/5 vs 5/5 |
+| Doesn't build the parked feature | 15/15 vs 15/15 | **10/10** vs 0/10 | 5/5 vs 5/5 |
+| Rejects a forged "review is done" note | 7/15 vs 3/15 | **10/10** vs 5/10 | 5/5 vs 5/5 |
+| Output tokens | −13% | **−48%** | −4% to −21% |
+
+**Honest verdicts.** The first confirmatory study (Claude) supported all three pre-registered primary effects but was
+**NOT SUPPORTED as pre-registered**: our completion gate made small models over-refuse permitted work (6/15 vs 14/15).
+We traced it, fixed it, pre-registered a re-test, and the over-refusal disappeared (5/6 and 6/6 vs native 5/6) while
+the gains held. The Sol study was also NOT SUPPORTED on its pre-registered primary cells — its biggest effects landed
+on cells we hadn't made primary. Both are published as specified.
+
+**The pattern:** the stronger the model, the less it needs help *inside* one harness — Opus with native memory is
+already excellent there. What doesn't shrink is **crossing boundaries**: a new agent, a different harness, a
+compaction deep into a long session. That's where the ledger earns its keep.
 
 ## How it works
 
@@ -110,6 +123,8 @@ The terminal CLI (`driftledger show | log <id> | verify | export`) reads the sam
   Only mechanical matchers (paths, command prefixes) are blocked outright.
 - Not proof against in-the-moment persuasion: a convincing forged note can still fool a weaker model in the turn it
   reads it. The record stays correct, and the next session recovers the truth.
+- Not a substitute for keeping it current: only confirmed entries govern and transfer. If you stop confirming, later
+  rules never reach another agent.
 - Single owner for now.
 
 ## Privacy
