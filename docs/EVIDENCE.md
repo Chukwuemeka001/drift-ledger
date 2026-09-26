@@ -16,8 +16,12 @@ they went our way or not. This page is the readable version.
   review is finished. We score what the agent **does**, not what it can recite.
 - **Blinded judges.** Replies are anonymized, shuffled and stripped of tool styling, then scored against a written
   rubric by independent judges.
-- **Isolation.** Eval runs use empty configs with a token-only login, so nothing from the experimenter's own setup leaks
-  into the agents' context.
+- **Isolation — with an erratum.** Eval runs use empty configs with a token-only login. We claimed this kept the
+  experimenter's own setup out of the agents' context; it did not fully: Claude Code also loads `CLAUDE.md` from the
+  workspace's ancestor directories, and every workspace sat under the experimenter's home, so every Claude Code run
+  loaded their personal global `CLAUDE.md` (identically in every arm; Codex runs were unaffected). Details and scope:
+  [ISOLATION_ERRATUM](https://github.com/Chukwuemeka001/GovDrift/blob/main/ISOLATION_ERRATUM.md). Future runs put
+  workspaces outside the home directory.
 - **Pre-registration.** The question, arms, cells, statistics and "what would count as failure" are committed publicly
   before a run. Deviations are logged.
 

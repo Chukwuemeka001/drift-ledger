@@ -13,6 +13,9 @@ python3 score.py report results/run1 scenarios/nclex_remediation.json   # after 
   probes with a written pass rule each, a fresh session and a second harness.
 - **Isolation:** each lineage gets an empty `CLAUDE_CONFIG_DIR` (login via `CLAUDE_CODE_OAUTH_TOKEN` in
   `~/.config/govdrift/eval.env`) or its own `CODEX_HOME`; its own git repo; native memory ON.
+  **Put `--out` outside your home directory**: Claude Code loads `CLAUDE.md` files from the workspace's ancestors
+  (including `~/.claude/CLAUDE.md`) regardless of `CLAUDE_CONFIG_DIR`. Our own runs got this wrong — see the GovDrift
+  isolation erratum.
 - **Arms:** `native`, `plugin` (careful owner confirms proposals with the intended type), `plugin-lazy` (owner stops
   confirming after a set turn).
 - **Robustness:** every step is keyed and skipped on resume; any failure stops the run; spend is transcript-derived and
